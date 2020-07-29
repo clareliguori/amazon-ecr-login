@@ -1,7 +1,7 @@
 on:
   push:
     branches:
-      - integ-tests
+      - test-docker-logout
 
 name: Integration Test
 
@@ -27,7 +27,7 @@ jobs:
 
     - name: Login to Amazon ECR
       id: login-ecr
-      uses: aws-actions/amazon-ecr-login@6adba700642e5979b6b98bb823e84a03c91279d0
+      uses: clareliguori/amazon-ecr-login@docker-logout
 
     - name: Tag and push an image to Amazon ECR
       env:
@@ -38,7 +38,3 @@ jobs:
         docker pull amazonlinux
         docker tag amazonlinux $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-
-    - name: Logout of Amazon ECR
-      if: always()
-      run: docker logout ${{ steps.login-ecr.outputs.registry }}
